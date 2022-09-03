@@ -68,70 +68,7 @@ const Dashboard = () => {
     { key: 'Product_price', label: 'product_price', _props: { scope: 'col' } },
     { key: 'Total_sold', label: 'total_sold', _props: { scope: 'col' } },
   ]
-  const items = [
-    {
-      class: 'Default',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-    },
-    {
-      class: 'Primary',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'primary' },
-    },
-    {
-      class: 'Secondary',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'secondary' },
-    },
-    {
-      class: 'Success',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'success' },
-    },
-    {
-      class: 'Danger',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'danger' },
-    },
-    {
-      class: 'Warning',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'warning' },
-    },
-    {
-      class: 'Info',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'info' },
-    },
-    {
-      class: 'Light',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'light' },
-    },
-    {
-      class: 'Dark',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'dark' },
-    },
-  ]
+  const items = []
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
   const progressExample = [
