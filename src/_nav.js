@@ -17,8 +17,10 @@ import {
   cilColumns,
   cilAppsSettings,
 } from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
-
+import { CLink, CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+const handleLogout = async () => {
+  console.log('logged out')
+}
 const _nav = [
   {
     component: CNavItem,
@@ -47,6 +49,16 @@ const _nav = [
         component: CNavItem,
         name: 'Login',
         to: '/login',
+      },
+      {
+        component: CNavItem,
+        name: 'Logout',
+        to: '/login',
+        attributes: {
+          onclick: () => {
+            console.log('worll')
+          },
+        },
       },
       {
         component: CNavItem,

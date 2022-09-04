@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { React, createContext, useContext } from 'react'
+import { React, createContext, useContext, useEffect, useState } from 'react'
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -11,11 +11,29 @@ import { auth } from '../Base'
 const UserContext = createContext()
 
 export const AuthContextProvider = ({ children }) => {
+  const [user, setUser] = useState({})
+
   const createUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password)
   }
+  const logOut = () => {
+    return signOut(auth)
+  }
 
-  return <UserContext.Provider value={{ createUser }}>{children}</UserContext.Provider>
+  const logIn = (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password)
+  }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      console.log(currentUser)
+      setUser(currentUser)
+    })
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
+  return <UserContext.Provider value={{ createUser, user, logIn }}>{children}</UserContext.Provider>
 }
 
 export const UserAuth = () => {

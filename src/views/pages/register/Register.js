@@ -21,6 +21,7 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 const Register = () => {
   const emailRef = useRef()
   const passwordRef = useRef()
+  const nameRef = useRef()
   const { createUser } = UserAuth()
   const navigate = useNavigate()
   const handleSubmit = async (e) => {
@@ -47,7 +48,7 @@ const Register = () => {
                     <CInputGroupText>
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
-                    <CFormInput placeholder="Username" autoComplete="username" />
+                    <CFormInput placeholder="Username" autoComplete="username" ref={nameRef} />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>

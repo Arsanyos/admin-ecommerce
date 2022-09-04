@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { UserAuth } from 'src/context/AuthContext'
 import {
   CAvatar,
   CButton,
@@ -62,6 +62,7 @@ import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 
 const Dashboard = () => {
+  const user = UserAuth()
   const columns = [
     { key: '#', _props: { scope: 'col' } },
     { key: 'Product_title', label: 'product_name', _props: { scope: 'col' } },
@@ -206,7 +207,7 @@ const Dashboard = () => {
                   style={{ width: '10rem', height: '8rem', marginBottom: '20px' }}
                 />
                 <CCardTitle style={{ color: '#3399ff' }}>
-                  Congurlations Arsan your Admin portal is ready to use!
+                  Congurlations {user && user.username} your Admin portal is ready to use!
                 </CCardTitle>
                 <CCardText>Manage your ecommerce site with ease</CCardText>
                 {/* <CButton href="#">Go somewhere</CButton> */}
