@@ -69,7 +69,7 @@ const Dashboard = () => {
     { key: '#', _props: { scope: 'col' } },
     { key: 'Product_title', label: 'product_name', _props: { scope: 'col' } },
     { key: 'Product_price', label: 'product_price', _props: { scope: 'col' } },
-    { key: 'Total_sold', label: 'total_sold', _props: { scope: 'col' } },
+    { key: 'views', label: 'views', _props: { scope: 'col' } },
   ]
   const items = []
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)

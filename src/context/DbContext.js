@@ -9,17 +9,25 @@ const dataContext = createContext()
 export const DataContextProvider = ({ children }) => {
   const [products, setProducts] = useState([])
   const [users, setUsers] = useState([])
-
+  const collectionNames = ['products', 'users']
   useEffect(() => {
-    async function fetchData() {
-      const q = query(collection(db, 'products'))
-
+    async function fetchData(collectionName) {
+      const q = query(collection(db, collectionName))
       const querySnapshot = await getDocs(q)
+      let temp = []
       querySnapshot.forEach((doc) => {
-        console.log(doc.data())
+        temp.push({ ...doc.data(), id: doc.id })
       })
+      if (collectionName.toLowerCase() == 'products') {
+        setProducts(temp)
+      } else if (collectionName.toLowerCase() == 'users') {
+        setUsers(temp)
+      }
     }
-    fetchData()
+    console.log(users)
+    for (let i = 0; i < collectionNames.length; i++) {
+      fetchData(collectionNames[i])
+    }
   }, [])
   return <dataContext.Provider value={{ products }}>{children}</dataContext.Provider>
 }
