@@ -69,10 +69,15 @@ const Dashboard = () => {
   let { user_growth } = Data()
   let { products_sold } = Data()
   let { revenue } = Data()
-  //defining variables
+  let { prd_cat } = Data()
 
   //defining functions
   let temp = []
+  let cat = []
+  let kitchen, mens, kids, electronics
+  kitchen = mens = kids = electronics = 0
+  cat.push(kitchen, mens, kids, electronics)
+
   let JAN, FEB, MAR, APR, MAY, JUN, JUL
   JAN = FEB = MAR = JUN = JUL = 1
   APR = MAY = 20
@@ -82,6 +87,28 @@ const Dashboard = () => {
       revenue += doc.amount
     })
     return revenue
+  }
+  function calculate_cat(x) {
+    x.forEach((doc) => {
+      switch (doc.category.toLowerCase()) {
+        case 'electronics':
+          console.log(doc.category.toLowerCase())
+          cat[3]++
+          break
+        case 'kitchen':
+          cat[0]++
+          break
+        case 'mens':
+          cat[1]++
+          break
+        case 'kids':
+          cat[2]++
+          break
+        default:
+          console.log('cat')
+      }
+    })
+    return cat
   }
   function calculate_growth(x) {
     x.forEach((doc) => {
@@ -248,6 +275,7 @@ const Dashboard = () => {
   //     }
   //   })
   // }
+  prd_cat = useMemo(() => calculate_cat(products), [products])
   revenue = useMemo(() => calculate_revenue(users), [users])
   products_sold = useMemo(() => calculate_growth(products), [products])
   user_growth = useMemo(() => calculate_growth(users), [users])
@@ -689,11 +717,11 @@ const Dashboard = () => {
               style={{ width: '15rem', height: '20rem' }}
               borderAlign="center"
               data={{
-                labels: ['Kitchen appliances', 'Kids', 'Clothings', 'Electronics'],
+                labels: ['Kitchen appliances', 'Kids', 'Mens ware', 'Electronics'],
                 datasets: [
                   {
                     backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-                    data: [40, 20, 80, 10],
+                    data: prd_cat,
                   },
                 ],
               }}
