@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { UserAuth } from 'src/context/AuthContext'
 import { Data } from 'src/context/DbContext'
 import {
@@ -63,8 +63,60 @@ import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 
 const Dashboard = () => {
-  const user = UserAuth()
-  // const { products } = Data()
+  //context data
+  const { products } = Data()
+  const { users } = Data()
+  let { user_growth } = Data()
+  let { products_sold } = Data()
+  let { revenue } = Data()
+  //defining variables
+
+  //defining functions
+  let temp = []
+  let JAN, FEB, MAR, APR, MAY, JUN, JUL
+  JAN = FEB = MAR = JUN = JUL = 1
+  APR = MAY = 20
+  temp.push(JAN, FEB, MAR, APR, MAY, JUN, JUL)
+  function calculate_revenue(x) {
+    x.forEach((doc) => {
+      revenue += doc.amount
+    })
+    return revenue
+  }
+  function calculate_growth(x) {
+    x.forEach((doc) => {
+      // console.log(doc)
+      switch (doc.date.toDate().getMonth()) {
+        case 0:
+          temp[0]++
+          break
+        case 1:
+          temp[1]++
+          break
+        case 2:
+          temp[2]++
+          break
+        case 3:
+          temp[3]++
+          break
+        case 4:
+          temp[4]++
+          break
+        case 5:
+          temp[5]++
+          break
+        case 6:
+          temp[6]++
+          break
+        default:
+          temp.log('out of range')
+          break
+      }
+    })
+    return temp
+  }
+
+  //DUMMY-DATA
   const columns = [
     { key: '#', _props: { scope: 'col' } },
     { key: 'Product_title', label: 'product_name', _props: { scope: 'col' } },
@@ -73,14 +125,6 @@ const Dashboard = () => {
   ]
   const items = []
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-
-  const progressExample = [
-    { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
-    { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
-    { title: 'Pageviews', value: '78.706 Views', percent: 60, color: 'warning' },
-    { title: 'New Users', value: '22.123 Users', percent: 80, color: 'danger' },
-    { title: 'Bounce Rate', value: 'Average Rate', percent: 40.15, color: 'primary' },
-  ]
 
   const progressGroupExample1 = [
     { title: 'Monday', value1: 34, value2: 78 },
@@ -194,7 +238,20 @@ const Dashboard = () => {
       activity: 'Last week',
     },
   ]
-
+  //  !!!FIX , CHECK IF PRODUCT IS SOLD OR NOT AND COMPUTE FUNCTION
+  // function calculateProductsSold(prd) {
+  //   prd.forEach((doc) => {
+  //     if (doc.status === 'Sold') {
+  //       calculate_growth(products)
+  //     } else {
+  //       console.log('jump')
+  //     }
+  //   })
+  // }
+  revenue = useMemo(() => calculate_revenue(users), [users])
+  products_sold = useMemo(() => calculate_growth(products), [products])
+  user_growth = useMemo(() => calculate_growth(users), [users])
+  useEffect(() => {}, [users, products, user_growth, products_sold])
   return (
     <>
       {/* <WidgetsDropdown /> */}
@@ -209,7 +266,7 @@ const Dashboard = () => {
                   style={{ width: '10rem', height: '8rem', marginBottom: '20px' }}
                 />
                 <CCardTitle style={{ color: '#3399ff' }}>
-                  Congurlations {user && user.username} your Admin portal is ready to use!
+                  Congurlations your Admin portal is ready to use!
                 </CCardTitle>
                 <CCardText>Manage your ecommerce site with ease</CCardText>
                 {/* <CButton href="#">Go somewhere</CButton> */}
@@ -236,13 +293,14 @@ const Dashboard = () => {
                 color="info"
                 value={
                   <>
-                    $9.000{' '}
+                    {users.length}
+                    <br />
                     <span className="fs-6 fw-normal">
                       (40.9% <CIcon icon={cilArrowTop} />)
                     </span>
                   </>
                 }
-                title="Widget title"
+                title="Users"
                 chart={
                   <CChartLine
                     className="mt-3 mx-3"
@@ -251,11 +309,11 @@ const Dashboard = () => {
                       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
                       datasets: [
                         {
-                          label: 'My First dataset',
+                          label: 'users growth',
                           backgroundColor: 'transparent',
                           borderColor: 'rgba(255,255,255,.55)',
                           pointBackgroundColor: '#39f',
-                          data: [1, 18, 9, 17, 34, 22, 11],
+                          data: user_growth,
                         },
                       ],
                     }}
@@ -278,7 +336,7 @@ const Dashboard = () => {
                         },
                         y: {
                           min: -9,
-                          max: 39,
+                          max: 50,
                           display: false,
                           grid: {
                             display: false,
@@ -310,13 +368,14 @@ const Dashboard = () => {
                 color="primary"
                 value={
                   <>
-                    $9.000{' '}
+                    {products.length}
+                    <br />
                     <span className="fs-6 fw-normal">
                       (40.9% <CIcon icon={cilArrowTop} />)
                     </span>
                   </>
                 }
-                title="Widget title"
+                title="products registered"
                 chart={
                   <CChartLine
                     className="mt-3 mx-3"
@@ -325,7 +384,7 @@ const Dashboard = () => {
                       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
                       datasets: [
                         {
-                          label: 'My First dataset',
+                          label: 'products registered',
                           backgroundColor: 'transparent',
                           borderColor: 'rgba(255,255,255,.55)',
                           pointBackgroundColor: '#39f',
@@ -384,13 +443,14 @@ const Dashboard = () => {
                 color="danger"
                 value={
                   <>
-                    $9.000{' '}
+                    {revenue}
+                    <br />
                     <span className="fs-6 fw-normal">
                       (40.9% <CIcon icon={cilArrowTop} />)
                     </span>
                   </>
                 }
-                title="Widget title"
+                title="Revenue"
                 chart={
                   <CChartBar
                     className="mt-3 mx-3"
@@ -470,7 +530,7 @@ const Dashboard = () => {
                     </span>
                   </>
                 }
-                title="Widget title"
+                title="Expenses"
                 chart={
                   <CChartLine
                     className="mt-3"
@@ -540,47 +600,39 @@ const Dashboard = () => {
                   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
                   datasets: [
                     {
-                      label: 'My First dataset',
+                      label: 'Products sold',
                       backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
                       borderColor: getStyle('--cui-info'),
                       pointHoverBackgroundColor: getStyle('--cui-info'),
                       borderWidth: 2,
-                      data: [
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                      ],
+                      data: products_sold,
                       fill: true,
                     },
-                    {
-                      label: 'My Second dataset',
-                      backgroundColor: 'transparent',
-                      borderColor: getStyle('--cui-success'),
-                      pointHoverBackgroundColor: getStyle('--cui-success'),
-                      borderWidth: 2,
-                      data: [
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                      ],
-                    },
-                    {
-                      label: 'My Third dataset',
-                      backgroundColor: 'transparent',
-                      borderColor: getStyle('--cui-danger'),
-                      pointHoverBackgroundColor: getStyle('--cui-danger'),
-                      borderWidth: 1,
-                      borderDash: [8, 5],
-                      data: [65, 65, 65, 65, 65, 65, 65],
-                    },
+                    // {
+                    //   label: 'My Second dataset',
+                    //   backgroundColor: 'transparent',
+                    //   borderColor: getStyle('--cui-success'),
+                    //   pointHoverBackgroundColor: getStyle('--cui-success'),
+                    //   borderWidth: 2,
+                    //   data: [
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //   ],
+                    // },
+                    // {
+                    //   label: 'My Third dataset',
+                    //   backgroundColor: 'transparent',
+                    //   borderColor: getStyle('--cui-danger'),
+                    //   pointHoverBackgroundColor: getStyle('--cui-danger'),
+                    //   borderWidth: 1,
+                    //   borderDash: [8, 5],
+                    //   data: [65, 65, 65, 65, 65, 65, 65],
+                    // },
                   ],
                 }}
                 options={{
