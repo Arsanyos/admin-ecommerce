@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useMemo } from 'react'
+import { Data } from 'src/context/DbContext'
 import {
   CAvatar,
   CButton,
@@ -55,53 +56,58 @@ import {
 import avatar3 from 'src/assets/images/avatars/3.jpg'
 function Products() {
   const columns = [
-    {
-      key: 'id',
-      label: '#',
-      _props: { scope: 'col' },
-    },
+    // {
+    //   key: 'id',
+    //   label: '#',
+    //   _props: { scope: 'col' },
+    // },
     // {
     //   key: 'profile-picture ',
     //   label: '',
     //   _props: { scope: 'col' },
     // },
     {
-      key: 'username',
-      label: 'Username',
+      key: 'name',
+      label: 'Product',
       _props: { scope: 'col' },
     },
     {
-      key: 'recentpurchase',
-      label: 'Recent purchase',
+      key: 'price',
+      label: 'Price',
       _props: { scope: 'col' },
     },
     {
-      key: 'gender',
-      label: 'Gender',
+      key: 'cat',
+      label: 'Category',
       _props: { scope: 'col' },
     },
     {
-      key: 'moneyspent',
-      label: 'Total money spent',
-      _props: { scope: 'col' },
-    },
-    {
-      key: 'userstatus',
+      key: 'status',
       label: 'Status',
       _props: { scope: 'col' },
     },
-  ]
-  const items = [
     {
-      id: 1,
-      username: 'Mark',
-      recentpurchase: 'Samsung 50 inch Curve TV',
-      gender: 'Male',
-      moneyspent: '250',
-      userstatus: 'Active',
-      _cellProps: { id: { scope: 'row' } },
+      key: 'views',
+      label: 'no of views',
+      _props: { scope: 'col' },
     },
   ]
+  const items = []
+  let { products } = Data()
+  function getProducts(x) {
+    x.forEach((doc) => {
+      let obj = {
+        name: doc.product_name,
+        price: doc.price,
+        cat: doc.category,
+        status: doc.status,
+        views: doc.views,
+        _cellProps: { id: { scope: 'row' } },
+      }
+      items.push(obj)
+    })
+  }
+  useMemo(() => getProducts(products), [products])
   return (
     <>
       <CRow>

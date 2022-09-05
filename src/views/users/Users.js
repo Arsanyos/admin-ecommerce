@@ -1,5 +1,5 @@
-import React from 'react'
-
+import React, { useEffect, useMemo } from 'react'
+import { Data } from 'src/context/DbContext'
 import {
   CAvatar,
   CButton,
@@ -56,11 +56,11 @@ import {
 import avatar3 from 'src/assets/images/avatars/3.jpg'
 function Users() {
   const columns = [
-    {
-      key: 'id',
-      label: '#',
-      _props: { scope: 'col' },
-    },
+    // {
+    //   key: 'id',
+    //   label: '#',
+    //   _props: { scope: 'col' },
+    // },
     // {
     //   key: 'profile-picture ',
     //   label: '',
@@ -93,16 +93,33 @@ function Users() {
     },
   ]
   const items = [
-    {
-      id: 1,
-      username: 'Mark',
-      recentpurchase: 'Samsung 50 inch Curve TV',
-      gender: 'Male',
-      moneyspent: '250',
-      userstatus: 'Active',
-      _cellProps: { id: { scope: 'row' } },
-    },
+    // {
+    //   username: ' doc.user_name',
+    //   recentpurchase: 'doc.recent_purchase',
+    //   gender: 'doc.gender',
+    //   moneyspent: ' doc.amount',
+    //   userstatus: 'doc.status',
+    //   _cellProps: { id: { scope: 'row' } },
+    // },
   ]
+  //FUNCTIONS
+  let { users } = Data()
+  function getUsers(x) {
+    x.forEach((doc) => {
+      let obj = {
+        username: doc.user_name,
+        recentpurchase: doc.recent_purchase,
+        gender: doc.gender,
+        moneyspent: doc.amount,
+        userstatus: doc.status,
+        _cellProps: { id: { scope: 'row' } },
+      }
+      items.push(obj)
+    })
+  }
+
+  useMemo(() => getUsers(users), [users])
+  // useEffect(() => {}, [users])
   return (
     <>
       <CRow>
@@ -135,18 +152,8 @@ function Users() {
             icon={<CIcon icon={cilChartPie} height={36} />}
             progress={{ color: 'danger', value: 75 }}
             text="Widget helper text"
-            title="Joined through Instagram"
-            value="89.9%"
-          />
-        </CCol>
-        <CCol>
-          <CWidgetStatsC
-            className="mb-3"
-            icon={<CIcon icon={cilChartPie} height={36} />}
-            progress={{ color: 'info', value: 75 }}
-            text="Widget helper text"
-            title="Joined through Instagram"
-            value="89.9%"
+            title="Heard through Instagram"
+            value="50%"
           />
         </CCol>
       </CRow>
