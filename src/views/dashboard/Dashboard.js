@@ -70,7 +70,8 @@ const Dashboard = () => {
   let { products_sold } = Data()
   let { revenue } = Data()
   let { prd_cat } = Data()
-
+  let { newCust } = Data()
+  let { recurringCust } = Data()
   //defining functions
   let temp = []
   let cat = []
@@ -87,6 +88,16 @@ const Dashboard = () => {
       revenue += doc.amount
     })
     return revenue
+  }
+  //FUNCTIONS
+  function calculate_new_recurring(x) {
+    x.forEach((doc) => {
+      if (doc.date.toDate().getYear() < 100) {
+        recurringCust++
+      } else {
+        newCust++
+      }
+    })
   }
   function calculate_cat(x) {
     x.forEach((doc) => {
@@ -153,15 +164,7 @@ const Dashboard = () => {
   const items = []
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
-  const progressGroupExample1 = [
-    { title: 'Monday', value1: 34, value2: 78 },
-    { title: 'Tuesday', value1: 56, value2: 94 },
-    { title: 'Wednesday', value1: 12, value2: 67 },
-    { title: 'Thursday', value1: 43, value2: 91 },
-    { title: 'Friday', value1: 22, value2: 73 },
-    { title: 'Saturday', value1: 53, value2: 82 },
-    { title: 'Sunday', value1: 9, value2: 69 },
-  ]
+  const progressGroupExample1 = [{ title: 'Monday', value1: newCust, value2: recurringCust }]
 
   const progressGroupExample2 = [
     { title: 'Male', icon: cilUser, value: 53 },
@@ -276,7 +279,8 @@ const Dashboard = () => {
   //   })
   // }
   prd_cat = useMemo(() => calculate_cat(products), [products])
-  revenue = useMemo(() => calculate_revenue(users), [users])
+  useMemo(() => calculate_new_recurring(users), [users])
+  useMemo(() => calculate_revenue(users), [users])
   products_sold = useMemo(() => calculate_growth(products), [products])
   user_growth = useMemo(() => calculate_growth(users), [users])
   useEffect(() => {}, [users, products, user_growth, products_sold])
@@ -302,13 +306,44 @@ const Dashboard = () => {
             </CCard>
           </CRow>
           <CRow>
-            <CWidgetStatsB
-              className="mb-3"
-              progress={{ color: 'success', value: 75 }}
-              text="Widget helper text"
-              title="Widget title"
-              value="89.9%"
-            />
+            <CCol>
+              <CCard className="mb-4" style={{ width: '35rem' }}>
+                <CCardHeader>Customers information</CCardHeader>
+                <CCardBody>
+                  <CCol>
+                    <CCol xs={12} md={6} xl={11}>
+                      <CRow>
+                        <CCol sm={6}>
+                          <div className="border-start border-start-4 border-start-info py-1 px-3">
+                            <div className="text-medium-emphasis small">New Clients</div>
+                            <div className="fs-5 fw-semibold">{newCust}</div>
+                          </div>
+                        </CCol>
+                        <CCol sm={6}>
+                          <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
+                            <div className="text-medium-emphasis small">Recurring Clients</div>
+                            <div className="fs-5 fw-semibold">{recurringCust}</div>
+                          </div>
+                        </CCol>
+                      </CRow>
+
+                      <hr className="mt-0" />
+                      {progressGroupExample1.map((item, index) => (
+                        <div className="progress-group mb-4" key={index}>
+                          <div className="progress-group-prepend">
+                            <span className="text-medium-emphasis small">{item.title}</span>
+                          </div>
+                          <div className="progress-group-bars">
+                            <CProgress thin color="info" value={item.value1} />
+                            <CProgress thin color="danger" value={item.value2} />
+                          </div>
+                        </div>
+                      ))}
+                    </CCol>
+                  </CCol>
+                </CCardBody>
+              </CCard>
+            </CCol>
           </CRow>
         </CCol>
         <CCol>
@@ -733,44 +768,7 @@ const Dashboard = () => {
       <WidgetsBrand withCharts />
 
       <CRow>
-        <CCol>
-          <CCard className="mb-4" style={{ width: '35rem' }}>
-            <CCardHeader>Customers information</CCardHeader>
-            <CCardBody>
-              <CCol>
-                <CCol xs={12} md={6} xl={11}>
-                  <CRow>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-info py-1 px-3">
-                        <div className="text-medium-emphasis small">New Clients</div>
-                        <div className="fs-5 fw-semibold">9,123</div>
-                      </div>
-                    </CCol>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Recurring Clients</div>
-                        <div className="fs-5 fw-semibold">22,643</div>
-                      </div>
-                    </CCol>
-                  </CRow>
-
-                  <hr className="mt-0" />
-                  {progressGroupExample1.map((item, index) => (
-                    <div className="progress-group mb-4" key={index}>
-                      <div className="progress-group-prepend">
-                        <span className="text-medium-emphasis small">{item.title}</span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="info" value={item.value1} />
-                        <CProgress thin color="danger" value={item.value2} />
-                      </div>
-                    </div>
-                  ))}
-                </CCol>
-              </CCol>
-            </CCardBody>
-          </CCard>
-        </CCol>
+        <CCol></CCol>
         <CCol>
           <CCard className="mb-4" style={{ width: '30rem' }}>
             <CCardHeader>Most sold products</CCardHeader>

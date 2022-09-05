@@ -13,6 +13,8 @@ export const DataContextProvider = ({ children }) => {
   let products_sold = []
   let revenue = 0
   let prd_cat = []
+  let newCust = 10
+  let recurringCust = 20
   const collectionNames = ['products', 'users']
   async function fetchData(collectionName) {
     const q = query(collection(db, collectionName))
@@ -34,7 +36,18 @@ export const DataContextProvider = ({ children }) => {
     }
   }, [])
   return (
-    <dataContext.Provider value={{ products, users, user_growth, products_sold, revenue, prd_cat }}>
+    <dataContext.Provider
+      value={{
+        products,
+        users,
+        user_growth,
+        products_sold,
+        revenue,
+        prd_cat,
+        newCust,
+        recurringCust,
+      }}
+    >
       {children}
     </dataContext.Provider>
   )
