@@ -1,5 +1,6 @@
-import React from 'react'
-
+import React, { useEffect, useMemo } from 'react'
+import { UserAuth } from 'src/context/AuthContext'
+import { Data } from 'src/context/DbContext'
 import {
   CAvatar,
   CButton,
@@ -62,95 +63,125 @@ import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 
 const Dashboard = () => {
+  //context data
+  const { products } = Data()
+  const { users } = Data()
+  let { user_growth } = Data()
+  let { products_sold } = Data()
+  let { revenue } = Data()
+  let { prd_cat } = Data()
+  let { newCust } = Data()
+  let { recurringCust } = Data()
+  //defining functions
+  let temp = []
+  let cat = []
+  let kitchen, mens, kids, electronics
+  kitchen = mens = kids = electronics = 0
+  cat.push(kitchen, mens, kids, electronics)
+
+  let JAN, FEB, MAR, APR, MAY, JUN, JUL
+  JAN = FEB = MAR = JUN = JUL = 1
+  APR = MAY = 20
+  temp.push(JAN, FEB, MAR, APR, MAY, JUN, JUL)
+  function calculate_revenue(x) {
+    x.forEach((doc) => {
+      revenue += doc.amount
+    })
+    return revenue
+  }
+  //FUNCTIONS
+  function calculate_new_recurring(x) {
+    x.forEach((doc) => {
+      if (doc.date.toDate().getYear() < 100) {
+        recurringCust++
+      } else {
+        newCust++
+      }
+    })
+  }
+  function calculate_cat(x) {
+    x.forEach((doc) => {
+      switch (doc.category.toLowerCase()) {
+        case 'electronics':
+          console.log(doc.category.toLowerCase())
+          cat[3]++
+          break
+        case 'kitchen':
+          cat[0]++
+          break
+        case 'mens':
+          cat[1]++
+          break
+        case 'kids':
+          cat[2]++
+          break
+        default:
+          console.log('cat')
+      }
+    })
+    return cat
+  }
+  function calculate_growth(x) {
+    x.forEach((doc) => {
+      // console.log(doc)
+      switch (doc.date.toDate().getMonth()) {
+        case 0:
+          temp[0]++
+          break
+        case 1:
+          temp[1]++
+          break
+        case 2:
+          temp[2]++
+          break
+        case 3:
+          temp[3]++
+          break
+        case 4:
+          temp[4]++
+          break
+        case 5:
+          temp[5]++
+          break
+        case 6:
+          temp[6]++
+          break
+        default:
+          temp.log('out of range')
+          break
+      }
+    })
+    return temp
+  }
+  function calculate_most_sold_product(x) {
+    x.forEach((doc) => {
+      if (doc.posted_before > 15) {
+        let product_title = doc.product_name
+        let product_price = doc.price
+        let views = doc.views
+        const obj = {
+          Product_title: product_title,
+          Product_price: product_price,
+          views: views,
+          _cellProps: { id: { scope: 'row' } },
+        }
+        items.push(obj)
+        console.log(items)
+      } else {
+        console.log('not most sold product')
+      }
+    })
+  }
+  //DUMMY-DATA
   const columns = [
-    { key: '#', _props: { scope: 'col' } },
     { key: 'Product_title', label: 'product_name', _props: { scope: 'col' } },
-    { key: 'Product_price', label: 'product_price', _props: { scope: 'col' } },
-    { key: 'Total_sold', label: 'total_sold', _props: { scope: 'col' } },
+    { key: 'Product_price', label: 'price', _props: { scope: 'col' } },
+    { key: 'views', label: 'views', _props: { scope: 'col' } },
   ]
-  const items = [
-    {
-      class: 'Default',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-    },
-    {
-      class: 'Primary',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'primary' },
-    },
-    {
-      class: 'Secondary',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'secondary' },
-    },
-    {
-      class: 'Success',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'success' },
-    },
-    {
-      class: 'Danger',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'danger' },
-    },
-    {
-      class: 'Warning',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'warning' },
-    },
-    {
-      class: 'Info',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'info' },
-    },
-    {
-      class: 'Light',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'light' },
-    },
-    {
-      class: 'Dark',
-      heading_1: 'Cell',
-      heading_2: 'Cell',
-      _cellProps: { class: { scope: 'row' } },
-      _props: { color: 'dark' },
-    },
-  ]
+  const items = []
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
-  const progressExample = [
-    { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
-    { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
-    { title: 'Pageviews', value: '78.706 Views', percent: 60, color: 'warning' },
-    { title: 'New Users', value: '22.123 Users', percent: 80, color: 'danger' },
-    { title: 'Bounce Rate', value: 'Average Rate', percent: 40.15, color: 'primary' },
-  ]
-
-  const progressGroupExample1 = [
-    { title: 'Monday', value1: 34, value2: 78 },
-    { title: 'Tuesday', value1: 56, value2: 94 },
-    { title: 'Wednesday', value1: 12, value2: 67 },
-    { title: 'Thursday', value1: 43, value2: 91 },
-    { title: 'Friday', value1: 22, value2: 73 },
-    { title: 'Saturday', value1: 53, value2: 82 },
-    { title: 'Sunday', value1: 9, value2: 69 },
-  ]
+  const progressGroupExample1 = [{ title: 'Monday', value1: newCust, value2: recurringCust }]
 
   const progressGroupExample2 = [
     { title: 'Male', icon: cilUser, value: 53 },
@@ -254,7 +285,23 @@ const Dashboard = () => {
       activity: 'Last week',
     },
   ]
-
+  //  !!!FIX , CHECK IF PRODUCT IS SOLD OR NOT AND COMPUTE FUNCTION
+  // function calculateProductsSold(prd) {
+  //   prd.forEach((doc) => {
+  //     if (doc.status === 'Sold') {
+  //       calculate_growth(products)
+  //     } else {
+  //       console.log('jump')
+  //     }
+  //   })
+  // }
+  prd_cat = useMemo(() => calculate_cat(products), [products])
+  useMemo(() => calculate_most_sold_product(products), [products])
+  useMemo(() => calculate_new_recurring(users), [users])
+  useMemo(() => calculate_revenue(users), [users])
+  products_sold = useMemo(() => calculate_growth(products), [products])
+  user_growth = useMemo(() => calculate_growth(users), [users])
+  useEffect(() => {}, [users, products, user_growth, products_sold])
   return (
     <>
       {/* <WidgetsDropdown /> */}
@@ -269,7 +316,7 @@ const Dashboard = () => {
                   style={{ width: '10rem', height: '8rem', marginBottom: '20px' }}
                 />
                 <CCardTitle style={{ color: '#3399ff' }}>
-                  Congurlations Arsan your Admin portal is ready to use!
+                  Congurlations your Admin portal is ready to use!
                 </CCardTitle>
                 <CCardText>Manage your ecommerce site with ease</CCardText>
                 {/* <CButton href="#">Go somewhere</CButton> */}
@@ -277,13 +324,44 @@ const Dashboard = () => {
             </CCard>
           </CRow>
           <CRow>
-            <CWidgetStatsB
-              className="mb-3"
-              progress={{ color: 'success', value: 75 }}
-              text="Widget helper text"
-              title="Widget title"
-              value="89.9%"
-            />
+            <CCol>
+              <CCard className="mb-4" style={{ width: '35rem' }}>
+                <CCardHeader>Customers information</CCardHeader>
+                <CCardBody>
+                  <CCol>
+                    <CCol xs={12} md={6} xl={11}>
+                      <CRow>
+                        <CCol sm={6}>
+                          <div className="border-start border-start-4 border-start-info py-1 px-3">
+                            <div className="text-medium-emphasis small">New Clients</div>
+                            <div className="fs-5 fw-semibold">{newCust}</div>
+                          </div>
+                        </CCol>
+                        <CCol sm={6}>
+                          <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
+                            <div className="text-medium-emphasis small">Recurring Clients</div>
+                            <div className="fs-5 fw-semibold">{recurringCust}</div>
+                          </div>
+                        </CCol>
+                      </CRow>
+
+                      <hr className="mt-0" />
+                      {progressGroupExample1.map((item, index) => (
+                        <div className="progress-group mb-4" key={index}>
+                          <div className="progress-group-prepend">
+                            <span className="text-medium-emphasis small">{item.title}</span>
+                          </div>
+                          <div className="progress-group-bars">
+                            <CProgress thin color="info" value={item.value1} />
+                            <CProgress thin color="danger" value={item.value2} />
+                          </div>
+                        </div>
+                      ))}
+                    </CCol>
+                  </CCol>
+                </CCardBody>
+              </CCard>
+            </CCol>
           </CRow>
         </CCol>
         <CCol>
@@ -296,13 +374,14 @@ const Dashboard = () => {
                 color="info"
                 value={
                   <>
-                    $9.000{' '}
+                    {users.length}
+                    <br />
                     <span className="fs-6 fw-normal">
                       (40.9% <CIcon icon={cilArrowTop} />)
                     </span>
                   </>
                 }
-                title="Widget title"
+                title="Users"
                 chart={
                   <CChartLine
                     className="mt-3 mx-3"
@@ -311,11 +390,11 @@ const Dashboard = () => {
                       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
                       datasets: [
                         {
-                          label: 'My First dataset',
+                          label: 'users growth',
                           backgroundColor: 'transparent',
                           borderColor: 'rgba(255,255,255,.55)',
                           pointBackgroundColor: '#39f',
-                          data: [1, 18, 9, 17, 34, 22, 11],
+                          data: user_growth,
                         },
                       ],
                     }}
@@ -338,7 +417,7 @@ const Dashboard = () => {
                         },
                         y: {
                           min: -9,
-                          max: 39,
+                          max: 50,
                           display: false,
                           grid: {
                             display: false,
@@ -370,13 +449,14 @@ const Dashboard = () => {
                 color="primary"
                 value={
                   <>
-                    $9.000{' '}
+                    {products.length}
+                    <br />
                     <span className="fs-6 fw-normal">
                       (40.9% <CIcon icon={cilArrowTop} />)
                     </span>
                   </>
                 }
-                title="Widget title"
+                title="products registered"
                 chart={
                   <CChartLine
                     className="mt-3 mx-3"
@@ -385,7 +465,7 @@ const Dashboard = () => {
                       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
                       datasets: [
                         {
-                          label: 'My First dataset',
+                          label: 'products registered',
                           backgroundColor: 'transparent',
                           borderColor: 'rgba(255,255,255,.55)',
                           pointBackgroundColor: '#39f',
@@ -444,13 +524,14 @@ const Dashboard = () => {
                 color="danger"
                 value={
                   <>
-                    $9.000{' '}
+                    {revenue}
+                    <br />
                     <span className="fs-6 fw-normal">
                       (40.9% <CIcon icon={cilArrowTop} />)
                     </span>
                   </>
                 }
-                title="Widget title"
+                title="Revenue"
                 chart={
                   <CChartBar
                     className="mt-3 mx-3"
@@ -530,7 +611,7 @@ const Dashboard = () => {
                     </span>
                   </>
                 }
-                title="Widget title"
+                title="Expenses"
                 chart={
                   <CChartLine
                     className="mt-3"
@@ -600,47 +681,39 @@ const Dashboard = () => {
                   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
                   datasets: [
                     {
-                      label: 'My First dataset',
+                      label: 'Products sold',
                       backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
                       borderColor: getStyle('--cui-info'),
                       pointHoverBackgroundColor: getStyle('--cui-info'),
                       borderWidth: 2,
-                      data: [
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                      ],
+                      data: products_sold,
                       fill: true,
                     },
-                    {
-                      label: 'My Second dataset',
-                      backgroundColor: 'transparent',
-                      borderColor: getStyle('--cui-success'),
-                      pointHoverBackgroundColor: getStyle('--cui-success'),
-                      borderWidth: 2,
-                      data: [
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                        random(50, 200),
-                      ],
-                    },
-                    {
-                      label: 'My Third dataset',
-                      backgroundColor: 'transparent',
-                      borderColor: getStyle('--cui-danger'),
-                      pointHoverBackgroundColor: getStyle('--cui-danger'),
-                      borderWidth: 1,
-                      borderDash: [8, 5],
-                      data: [65, 65, 65, 65, 65, 65, 65],
-                    },
+                    // {
+                    //   label: 'My Second dataset',
+                    //   backgroundColor: 'transparent',
+                    //   borderColor: getStyle('--cui-success'),
+                    //   pointHoverBackgroundColor: getStyle('--cui-success'),
+                    //   borderWidth: 2,
+                    //   data: [
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //     random(50, 200),
+                    //   ],
+                    // },
+                    // {
+                    //   label: 'My Third dataset',
+                    //   backgroundColor: 'transparent',
+                    //   borderColor: getStyle('--cui-danger'),
+                    //   pointHoverBackgroundColor: getStyle('--cui-danger'),
+                    //   borderWidth: 1,
+                    //   borderDash: [8, 5],
+                    //   data: [65, 65, 65, 65, 65, 65, 65],
+                    // },
                   ],
                 }}
                 options={{
@@ -697,11 +770,11 @@ const Dashboard = () => {
               style={{ width: '15rem', height: '20rem' }}
               borderAlign="center"
               data={{
-                labels: ['Kitchen appliances', 'Kids', 'Clothings', 'Electronics'],
+                labels: ['Kitchen appliances', 'Kids', 'Mens ware', 'Electronics'],
                 datasets: [
                   {
                     backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
-                    data: [40, 20, 80, 10],
+                    data: prd_cat,
                   },
                 ],
               }}
@@ -713,46 +786,9 @@ const Dashboard = () => {
       <WidgetsBrand withCharts />
 
       <CRow>
+        <CCol></CCol>
         <CCol>
-          <CCard className="mb-4" style={{ width: '35rem' }}>
-            <CCardHeader>Customers information</CCardHeader>
-            <CCardBody>
-              <CCol>
-                <CCol xs={12} md={6} xl={11}>
-                  <CRow>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-info py-1 px-3">
-                        <div className="text-medium-emphasis small">New Clients</div>
-                        <div className="fs-5 fw-semibold">9,123</div>
-                      </div>
-                    </CCol>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Recurring Clients</div>
-                        <div className="fs-5 fw-semibold">22,643</div>
-                      </div>
-                    </CCol>
-                  </CRow>
-
-                  <hr className="mt-0" />
-                  {progressGroupExample1.map((item, index) => (
-                    <div className="progress-group mb-4" key={index}>
-                      <div className="progress-group-prepend">
-                        <span className="text-medium-emphasis small">{item.title}</span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="info" value={item.value1} />
-                        <CProgress thin color="danger" value={item.value2} />
-                      </div>
-                    </div>
-                  ))}
-                </CCol>
-              </CCol>
-            </CCardBody>
-          </CCard>
-        </CCol>
-        <CCol>
-          <CCard className="mb-4" style={{ width: '30rem' }}>
+          <CCard className="mb-4" style={{ width: '30rem', position: 'relative', right: '240px' }}>
             <CCardHeader>Most sold products</CCardHeader>
             <CCardBody>
               <CTable columns={columns} items={items} />

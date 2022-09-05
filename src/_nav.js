@@ -12,19 +12,60 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
+  cilUser,
+  cilAssistiveListeningSystem,
+  cilColumns,
+  cilAppsSettings,
 } from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
-
+import { CLink, CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+const handleLogout = async () => {
+  console.log('logged out')
+}
 const _nav = [
   {
     component: CNavItem,
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
+  },
+  {
+    component: CNavItem,
+    name: 'Users',
+    to: '/users',
+    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Products',
+    to: '/products',
+    icon: <CIcon icon={cilColumns} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavGroup,
+    name: 'Account settings',
+    icon: <CIcon icon={cilAppsSettings} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Login',
+        to: '/login',
+      },
+      {
+        component: CNavItem,
+        name: 'Logout',
+        to: '/login',
+        attributes: {
+          onclick: () => {
+            console.log('worll')
+          },
+        },
+      },
+      {
+        component: CNavItem,
+        name: 'Register',
+        to: '/register',
+      },
+    ],
   },
   // {
   //   component: CNavTitle,
@@ -267,33 +308,7 @@ const _nav = [
   //   component: CNavTitle,
   //   name: 'Extras',
   // },
-  // {
-  //   component: CNavGroup,
-  //   name: 'Pages',
-  //   icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
-  //   items: [
-  //     {
-  //       component: CNavItem,
-  //       name: 'Login',
-  //       to: '/login',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Register',
-  //       to: '/register',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Error 404',
-  //       to: '/404',
-  //     },
-  //     {
-  //       component: CNavItem,
-  //       name: 'Error 500',
-  //       to: '/500',
-  //     },
-  //   ],
-  // },
+  // ,
   // {
   //   component: CNavItem,
   //   name: 'Docs',
