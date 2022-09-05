@@ -1,5 +1,6 @@
 import React from 'react'
 import { UserAuth } from 'src/context/AuthContext'
+import { Data } from 'src/context/DbContext'
 import {
   CAvatar,
   CButton,
@@ -63,6 +64,7 @@ import WidgetsDropdown from '../widgets/WidgetsDropdown'
 
 const Dashboard = () => {
   const user = UserAuth()
+  // const { products } = Data()
   const columns = [
     { key: '#', _props: { scope: 'col' } },
     { key: 'Product_title', label: 'product_name', _props: { scope: 'col' } },
