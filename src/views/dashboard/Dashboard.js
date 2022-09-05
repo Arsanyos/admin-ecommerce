@@ -153,12 +153,29 @@ const Dashboard = () => {
     })
     return temp
   }
-
+  function calculate_most_sold_product(x) {
+    x.forEach((doc) => {
+      if (doc.posted_before > 15) {
+        let product_title = doc.product_name
+        let product_price = doc.price
+        let views = doc.views
+        const obj = {
+          Product_title: product_title,
+          Product_price: product_price,
+          views: views,
+          _cellProps: { id: { scope: 'row' } },
+        }
+        items.push(obj)
+        console.log(items)
+      } else {
+        console.log('not most sold product')
+      }
+    })
+  }
   //DUMMY-DATA
   const columns = [
-    { key: '#', _props: { scope: 'col' } },
     { key: 'Product_title', label: 'product_name', _props: { scope: 'col' } },
-    { key: 'Product_price', label: 'product_price', _props: { scope: 'col' } },
+    { key: 'Product_price', label: 'price', _props: { scope: 'col' } },
     { key: 'views', label: 'views', _props: { scope: 'col' } },
   ]
   const items = []
@@ -279,6 +296,7 @@ const Dashboard = () => {
   //   })
   // }
   prd_cat = useMemo(() => calculate_cat(products), [products])
+  useMemo(() => calculate_most_sold_product(products), [products])
   useMemo(() => calculate_new_recurring(users), [users])
   useMemo(() => calculate_revenue(users), [users])
   products_sold = useMemo(() => calculate_growth(products), [products])
@@ -770,7 +788,7 @@ const Dashboard = () => {
       <CRow>
         <CCol></CCol>
         <CCol>
-          <CCard className="mb-4" style={{ width: '30rem' }}>
+          <CCard className="mb-4" style={{ width: '30rem', position: 'relative', right: '240px' }}>
             <CCardHeader>Most sold products</CCardHeader>
             <CCardBody>
               <CTable columns={columns} items={items} />
