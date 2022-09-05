@@ -1,6 +1,8 @@
 import React, { Component, Suspense } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
+//importing contextProviders
 import { AuthContextProvider } from './context/AuthContext'
+import { DataContextProvider } from './context/DbContext'
 import ProtectedRoute from './ProtectedRoute'
 
 import './scss/style.scss'
